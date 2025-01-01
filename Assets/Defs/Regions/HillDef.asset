@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cb3ba13d1b1e7e4e9db6113a9081398, type: 3}
+  m_Name: HillDef
+  m_EditorClassIdentifier: 
+  type: 2
+  regionColor: {r: 0.5188679, g: 0.3652668, b: 0.2961463, a: 1}
+  fadeDistance: 999999
+  labelSize: 70
