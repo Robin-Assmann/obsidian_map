@@ -18,22 +18,22 @@ public class CameraController : MonoBehaviour
     [SerializeField] CinemachineConfiner2D confiner2D;
     [SerializeField] RectTransform mapRect;
 
+    public event Action zoomChanged;
+
     public Camera Cam => cam;
     public float ZoomPercentage => Mathf.Clamp01((_camDistance) / (MaxDistance));
-
-    public event Action zoomChanged;
 
     static CameraController _instance;
     float _camDistance;
     Vector3 _distance;
     Vector2 _startDrag;
     Vector3 _startPosition;
-    CinemachineFramingTransposer _framingTransposer;
     float _mapWidth;
     float _mapHeight;
-    Bounds _targetBounds = new Bounds();
+    Bounds _targetBounds = new();
+    CinemachineFramingTransposer _framingTransposer;
 
-    private void Awake()
+    void Awake()
     {
         if (_instance == null)
         {
@@ -41,7 +41,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
         _mapWidth = mapRect.rect.width * mapRect.lossyScale.x;
         _mapHeight = mapRect.rect.height * mapRect.lossyScale.y;
@@ -55,7 +55,7 @@ public class CameraController : MonoBehaviour
         AdjustBounds();
     }
 
-    private void Update()
+    void Update()
     {
         if (_framingTransposer == null) return;
         confiner2D.InvalidateCache();
@@ -88,28 +88,12 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-
-
         if (Input.mouseScrollDelta == Vector2.zero) return;
 
         _camDistance = Mathf.Clamp(_framingTransposer.m_CameraDistance + Input.mouseScrollDelta.y * zoomSpeed, MinDistance, MaxDistance);
         _framingTransposer.m_CameraDistance = _camDistance;
         zoomChanged?.Invoke();
         AdjustBounds();
-    }
-
-    void AdjustBounds()
-    {
-        var borderPoint = new Vector3(0, 0, -cam.transform.position.z);
-        var borderPosition = cam.ScreenToWorldPoint(borderPoint);
-
-        var midPoint = new Vector3(Screen.width / 2f, Screen.height / 2f, -cam.transform.position.z);
-        var midPosition = cam.ScreenToWorldPoint(midPoint);
-
-        _distance = midPosition - borderPoint;
-        _targetBounds.min = new Vector3(-((_mapWidth + _distance.x) / 2f), -((_mapHeight + _distance.y) / 2f) + 0.3f * _distance.y);
-        _targetBounds.max = new Vector3(((_mapWidth + _distance.x) / 2f), ((_mapHeight + _distance.y) / 2f - 0.3f * _distance.y));
-        MoveAndClampTarget(targetTx.position);
     }
 
     public static void ZoomTo(Vector2 position, float distance) => _instance.ZoomToPositionAndDistance(position, distance);
@@ -143,6 +127,20 @@ public class CameraController : MonoBehaviour
     public void OnEndDrag(PointerEventData eventData)
     {
         _startDrag = Vector2.zero;
+    }
+
+    void AdjustBounds()
+    {
+        var borderPoint = new Vector3(0, 0, -cam.transform.position.z);
+        var borderPosition = cam.ScreenToWorldPoint(borderPoint);
+
+        var midPoint = new Vector3(Screen.width / 2f, Screen.height / 2f, -cam.transform.position.z);
+        var midPosition = cam.ScreenToWorldPoint(midPoint);
+
+        _distance = midPosition - borderPoint;
+        _targetBounds.min = new Vector3(-((_mapWidth + _distance.x) / 2f), -((_mapHeight + _distance.y) / 2f) + 0.3f * _distance.y);
+        _targetBounds.max = new Vector3(((_mapWidth + _distance.x) / 2f), ((_mapHeight + _distance.y) / 2f - 0.3f * _distance.y));
+        MoveAndClampTarget(targetTx.position);
     }
 
     void MovePosition(Vector3 delta)

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Dreamteck.Splines;
 using UnityEngine;
 using UnityEngine.U2D;

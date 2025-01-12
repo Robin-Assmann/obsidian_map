@@ -14,10 +14,10 @@ public class DistanceManager : MonoBehaviour
 
     static DistanceManager _instance;
 
-    List<Vector3> _points = new List<Vector3>();
-    Spline _spline = new Spline();
+    readonly List<Vector3> _points = new();
+    readonly Spline _spline = new();
 
-    private void Awake()
+    void Awake()
     {
         if (_instance == null)
         {
@@ -29,7 +29,7 @@ public class DistanceManager : MonoBehaviour
         OnZoomChanged();
     }
 
-    private void Update()
+    void Update()
     {
         if (Input.GetKey(KeyCode.Mouse1) && _points.Count >= 2)
         {
@@ -98,6 +98,5 @@ public class DistanceManager : MonoBehaviour
 
         splineContainer.Spline = _spline;
         splineExtrude.Rebuild();
-
     }
 }

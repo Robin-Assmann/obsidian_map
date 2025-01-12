@@ -49,7 +49,6 @@ public class RegionWindow : MonoBehaviour
         }
         typeDropdown.AddOptions(options);
         typeDropdown.onValueChanged.AddListener(value => {
-            Debug.Log($"Region {_regionData == null} {value}");
             _regionData.type = (RegionTypes)value;
             RefreshDisplay();
         });
@@ -57,7 +56,6 @@ public class RegionWindow : MonoBehaviour
 
     public void SetData(RegionData regionData, RegionDisplay display)
     {
-        Debug.Log($"RegionData {regionData == null}");
         _regionData = regionData;
         _display = display;
         Refresh();

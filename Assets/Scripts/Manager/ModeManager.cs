@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -29,7 +28,7 @@ public class ModeManager : MonoBehaviour
     RegionDisplay _selectedRegionDisplay;
     RoadDisplay _selectedRoadDisplay;
 
-    private void Awake()
+    void Awake()
     {
         if (_instance == null)
         {
@@ -44,7 +43,7 @@ public class ModeManager : MonoBehaviour
         modeToggles[0].toggle.isOn = true;
     }
 
-    private void Update()
+    void Update()
     {
         if (!Input.anyKey) return;
         if (_inputFieldSelected) return;
@@ -135,11 +134,13 @@ public class ModeManager : MonoBehaviour
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        //If SiteCreation is enabled
         if (_currentType == ModeType.CreateSite)
         {
             var screenPosition = new Vector3(eventData.position.x, eventData.position.y, -cameraController.Cam.transform.position.z);
             var position = cameraController.Cam.ScreenToWorldPoint(screenPosition);
 
+            //Create a new Site
             var siteData = new SiteData();
             siteData.displayName = "New Town";
             siteData.type = SiteTypes.City;
@@ -154,6 +155,7 @@ public class ModeManager : MonoBehaviour
             SetToggleOn(ModeType.Move);
         }
 
+        //If RegionCreation is enabled
         if (_currentType == ModeType.CreateRegion)
         {
             var screenPosition = new Vector3(eventData.position.x, eventData.position.y, -cameraController.Cam.transform.position.z);
@@ -177,6 +179,7 @@ public class ModeManager : MonoBehaviour
                 _selectedRegionDisplay.Refresh(_selectedRegionDisplay.Data);
             } else
             {
+                //Create a new Region
                 var regionData = new RegionData();
                 regionData.displayName = "New Region";
                 regionData.type = RegionTypes.Empire;
@@ -192,6 +195,7 @@ public class ModeManager : MonoBehaviour
             }
         }
 
+        //If RoadCreation is enabled
         if (_currentType == ModeType.CreateRoad)
         {
             var screenPosition = new Vector3(eventData.position.x, eventData.position.y, -cameraController.Cam.transform.position.z);
@@ -215,6 +219,7 @@ public class ModeManager : MonoBehaviour
                 _selectedRoadDisplay.Refresh(_selectedRoadDisplay.Data);
             } else
             {
+                //Create a new Road
                 var roadData = new RoadData();
                 roadData.displayName = "New Road";
                 roadData.type = RoadTypes.Street;
@@ -230,6 +235,7 @@ public class ModeManager : MonoBehaviour
             }
         }
 
+        //If Distance Mode is enabled
         if (_currentType == ModeType.CheckDistance)
         {
             distanceManager.OnPointerClick(eventData);

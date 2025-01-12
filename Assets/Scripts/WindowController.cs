@@ -44,7 +44,6 @@ public class WindowController : MonoBehaviour
     {
         cameraController.MoveToPosition(new Vector2(data.xPosition, data.yPosition));
 
-        Debug.Log("Show Data Window " + data.dataType);
         switch (data.dataType)
         {
             case DataType.Site:

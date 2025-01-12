@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using UnityEngine;
 
 public class DisplayManager : MonoBehaviour
@@ -11,9 +10,9 @@ public class DisplayManager : MonoBehaviour
     [SerializeField] RoadDisplay roadDisplay;
     [SerializeField] CameraController cameraController;
 
-    Dictionary<SiteData, SiteDisplay> _spawnedSiteDisplays = new Dictionary<SiteData, SiteDisplay>();
-    Dictionary<RegionData, RegionDisplay> _spawnedRegionDisplays = new Dictionary<RegionData, RegionDisplay>();
-    Dictionary<RoadData, RoadDisplay> _spawnedRoadDisplays = new Dictionary<RoadData, RoadDisplay>();
+    readonly Dictionary<SiteData, SiteDisplay> _spawnedSiteDisplays = new();
+    readonly Dictionary<RegionData, RegionDisplay> _spawnedRegionDisplays = new();
+    readonly Dictionary<RoadData, RoadDisplay> _spawnedRoadDisplays = new();
 
     bool _siteInteractibility = false;
     bool _regionInteractibility = false;
@@ -89,6 +88,30 @@ public class DisplayManager : MonoBehaviour
 
     public static void RemoveSite(SiteData siteData) => _instance.DoRemoveSite(siteData);
 
+    public RegionDisplay AddRegion(RegionData regionData)
+    {
+        var regionD = Instantiate(regionDisplay, container);
+        regionD.SetData(regionData, cameraController);
+        regionD.SetInteractiblity(_regionInteractibility);
+        _spawnedRegionDisplays.Add(regionData, regionD);
+        return regionD;
+    }
+
+    public static void RemoveRegion(RegionData siteData) => _instance.DoRemoveRegion(siteData);
+
+    public RoadDisplay AddRoad(RoadData roadData)
+    {
+        var roadD = Instantiate(roadDisplay, container);
+        roadD.SetData(roadData, cameraController);
+        roadD.SetInteractiblity(_roadInteractibility);
+        _spawnedRoadDisplays.Add(roadData, roadD);
+        return roadD;
+    }
+
+    public static void RemoveRoad(RoadData siteData) => _instance.DoRemoveRoad(siteData);
+
+    public static void SelectBestFitDisplay(string searchTerm) => _instance.DoSelectBestFitDisplay(searchTerm);
+
     void DoRemoveSite(SiteData siteData)
     {
         if (_spawnedSiteDisplays.TryGetValue(siteData, out var display))
@@ -100,20 +123,7 @@ public class DisplayManager : MonoBehaviour
             ModeManager.SetToggleOn(Enums.ModeType.Move);
             return;
         }
-
-        Debug.LogWarning("Tried RemoveSite, but could not find Display!");
     }
-
-    public RegionDisplay AddRegion(RegionData regionData)
-    {
-        var regionD = Instantiate(regionDisplay, container);
-        regionD.SetData(regionData, cameraController);
-        regionD.SetInteractiblity(_regionInteractibility);
-        _spawnedRegionDisplays.Add(regionData, regionD);
-        return regionD;
-    }
-
-    public static void RemoveRegion(RegionData siteData) => _instance.DoRemoveRegion(siteData);
 
     void DoRemoveRegion(RegionData regionData)
     {
@@ -126,20 +136,7 @@ public class DisplayManager : MonoBehaviour
             ModeManager.SetToggleOn(Enums.ModeType.Move);
             return;
         }
-
-        Debug.LogWarning("Tried RemoveRegion, but could not find Display!");
     }
-
-    public RoadDisplay AddRoad(RoadData roadData)
-    {
-        var regionD = Instantiate(roadDisplay, container);
-        regionD.SetData(roadData, cameraController);
-        regionD.SetInteractiblity(_roadInteractibility);
-        _spawnedRoadDisplays.Add(roadData, regionD);
-        return regionD;
-    }
-
-    public static void RemoveRoad(RoadData siteData) => _instance.DoRemoveRoad(siteData);
 
     void DoRemoveRoad(RoadData roadData)
     {
@@ -152,11 +149,7 @@ public class DisplayManager : MonoBehaviour
             ModeManager.SetToggleOn(Enums.ModeType.Move);
             return;
         }
-
-        Debug.LogWarning("Tried RemoveRoad, but could not find Display!");
     }
-
-    public static void SelectBestFitDisplay(string searchTerm) => _instance.DoSelectBestFitDisplay(searchTerm);
 
     void DoSelectBestFitDisplay(string searchTerm)
     {

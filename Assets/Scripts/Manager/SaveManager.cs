@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using SimpleFileBrowser;
 using System.IO;
-using System;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -25,7 +24,7 @@ public class SaveManager : MonoBehaviour
 
     static SaveManager _instance;
 
-    private void Start()
+    void Start()
     {
         if (_instance == null)
         {
@@ -103,7 +102,6 @@ public class SaveManager : MonoBehaviour
             try
             {
                 string fileContents = File.ReadAllText(path);
-                //saveData = JsonUtility.FromJson<SaveData>(fileContents);
                 saveData = JsonConvert.DeserializeObject<SaveData>(fileContents);
                 _savePath = path;
                 PlayerPrefs.SetString(SavePathKey, _savePath);

@@ -10,7 +10,7 @@ public class DefManager : MonoBehaviour
 
     static DefManager _instance;
 
-    private void Awake()
+    void Awake()
     {
         if (_instance == null)
         {
@@ -21,5 +21,4 @@ public class DefManager : MonoBehaviour
     public static SiteDef GetSiteDef(SiteTypes type) => _instance.siteDefs.First((def) => def.Type == type);
     public static RegionDef GetRegionDef(RegionTypes type) => _instance.regionDefs.First((def) => def.Type == type);
     public static RoadDef GetRoadDef(RoadTypes type) => _instance.roadDefs.First((def) => def.Type == type);
-
 }
